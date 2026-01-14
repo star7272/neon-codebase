@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Comprehensive Coding Lessons</title>
+
+<!-- ICONS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+    body {
+        background: #000;
+        font-family: Arial, sans-serif;
+        color: #fff;
+        margin: 0;
+        padding: 20px;
+        scroll-behavior: smooth;
+    }
+
+    h1 {
+        text-align: center;
+        color: cyan;
+        text-shadow: 0 0 15px cyan;
+        margin-bottom: 20px;
+    }
+
+    /* SEARCH & FILTER */
+    #controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    input, select {
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid cyan;
+        background: #000;
+        color: #fff;
+        outline: none;
+        box-shadow: 0 0 10px cyan inset;
+    }
+
+    input::placeholder {
+        color: cyan;
+    }
+
+    /* LESSON STYLES */
+    .lesson {
+        border: 2px solid cyan;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+        background: rgba(0, 255, 255, 0.05);
+        box-shadow: 0 0 10px cyan;
+    }
+
+    .lesson:hover {
+        background: rgba(0, 255, 255, 0.2);
+        transform: scale(1.02);
+    }
+
+    .lesson h3 {
+        margin: 0;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-shadow: 0 0 10px cyan;
+    }
+
+    .notes-box {
+        display: none;
+        padding: 10px;
+        margin-top: 8px;
+        border-left: 2px solid cyan;
+        font-size: 14px;
+        line-height: 1.5;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* FLOATING SIDEBAR */
+    #sidebar {
+        position: fixed;
+        top: 100px;
+        left: 10px;
+        width: 200px;
+        background: rgba(0,255,255,0.1);
+        border: 2px solid cyan;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 0 15px cyan;
+    }
+
+    #sidebar h3 {
+        margin-top: 0;
+        color: cyan;
+        text-align: center;
+        text-shadow: 0 0 10px cyan;
+    }
+
+    #sidebar a {
+        display: block;
+        color: #00ffff;
+        text-decoration: none;
+        margin: 8px 0;
+        padding: 6px;
+        border-radius: 5px;
+        transition: 0.2s;
+    }
+
+    #sidebar a:hover {
+        background: rgba(0,255,255,0.3);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+        #sidebar {
+            position: static;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<h1><i class="fa-solid fa-book"></i> Comprehensive Coding Lessons</h1>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+    <h3>Categories</h3>
+    <a href="#beginner">Beginner</a>
+    <a href="#intermediate">Intermediate</a>
+    <a href="#advanced">Advanced</a>
+    <a href="#tools">Tools & Frameworks</a>
+    <a href="#projects">Projects</a>
+</div>
+
+<!-- SEARCH & FILTER -->
+<div id="controls">
+    <input type="text" id="searchInput" placeholder="Search lessons..." onkeyup="filterLessons()">
+    <select id="categoryFilter" onchange="filterLessons()">
+        <option value="all">All Categories</option>
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+        <option value="tools">Tools & Frameworks</option>
+        <option value="projects">Projects</option>
+    </select>
+</div>
+
+<div id="lessonList"></div>
+
+<script>
+// Lesson Data with Categories
+const lessonsData = [
+    // BEGINNER
+    { title: "Introduction to Coding", note: "Coding is giving instructions to a computer using a programming language.", category: "beginner", icon: "fa-code" },
+    { title: "HTML Basics", note: "HTML structures web content using tags like <h1>, <p>, <img>.", category: "beginner", icon: "fa-html5" },
+    { title: "HTML Tags & Structure", note: "Learn headings, paragraphs, links, images, lists, and tables.", category: "beginner", icon: "fa-file-code" },
+    { title: "CSS Basics", note: "CSS styles HTML elements with colors, fonts, and spacing.", category: "beginner", icon: "fa-paint-brush" },
+    { title: "CSS Selectors & Styling", note: "Selectors target elements; style properties define appearance.", category: "beginner", icon: "fa-object-group" },
+    { title: "CSS Layouts (Flex & Grid)", note: "Use Flexbox and Grid for responsive layouts.", category: "beginner", icon: "fa-th-large" },
+    { title: "JavaScript Basics", note: "JS makes web pages interactive.", category: "beginner", icon: "fa-js" },
+    { title: "Variables & Data Types", note: "Variables store data; types include numbers, strings, booleans.", category: "beginner", icon: "fa-database" },
+    { title: "Operators & Expressions", note: "Operators perform calculations; expressions combine values.", category: "beginner", icon: "fa-calculator" },
+    { title: "Functions in JS", note: "Functions are reusable code blocks for specific tasks.", category: "beginner", icon: "fa-gears" },
+    { title: "Loops & Conditionals", note: "Loops repeat actions; conditionals make decisions.", category: "beginner", icon: "fa-repeat" },
+    { title: "DOM Manipulation", note: "DOM lets JS manipulate HTML elements dynamically.", category: "beginner", icon: "fa-browser" },
+    { title: "Events & Interactivity", note: "Events trigger actions like clicks, scrolls, typing.", category: "beginner", icon: "fa-bolt" },
+    { title: "Forms & Validation", note: "Validate user input with JS and HTML constraints.", category: "beginner", icon: "fa-check-circle" },
+    { title: "Mini Projects for Beginners", note: "Projects: calculator, todo app, counter, etc.", category: "beginner", icon: "fa-diagram-project" },
+
+    // INTERMEDIATE
+    { title: "Arrays & Objects in JS", note: "Arrays hold multiple values; objects store key-value pairs.", category: "intermediate", icon: "fa-list" },
+    { title: "ES6 Features", note: "ES6 features: let/const, arrow functions, template literals.", category: "intermediate", icon: "fa-sparkles" },
+    { title: "Template Literals & Destructuring", note: "Destructure arrays/objects for easier access to values.", category: "intermediate", icon: "fa-file-import" },
+    { title: "Classes & Objects", note: "Classes define templates for objects; constructors initialize them.", category: "intermediate", icon: "fa-users" },
+    { title: "Modules & Imports", note: "Modules split code; import/export allows reuse.", category: "intermediate", icon: "fa-box" },
+    { title: "Async JS: Promises & Async/Await", note: "Handle asynchronous operations with Promises and async/await.", category: "intermediate", icon: "fa-cubes" },
+    { title: "APIs & Fetch Requests", note: "Fetch data from APIs using Fetch API or Axios.", category: "intermediate", icon: "fa-server" },
+    { title: "JSON & Local Storage", note: "JSON stores structured data; local storage persists it in browser.", category: "intermediate", icon: "fa-boxes-stacked" },
+    { title: "Error Handling & Try/Catch", note: "Try/catch handles errors gracefully.", category: "intermediate", icon: "fa-wrench" },
+    { title: "Debugging Tools & Console Methods", note: "Use console.log(), breakpoints, and dev tools for debugging.", category: "intermediate", icon: "fa-rocket" },
+
+    // ADVANCED
+    { title: "Advanced DOM Manipulation", note: "Manipulate complex DOM structures dynamically.", category: "advanced", icon: "fa-browser" },
+    { title: "Event Delegation & Bubbling", note: "Event delegation improves performance; bubbling manages event flow.", category: "advanced", icon: "fa-bolt" },
+    { title: "Regular Expressions (Regex)", note: "Regex is used for pattern matching in strings.", category: "advanced", icon: "fa-code" },
+    { title: "Web Storage & Cookies", note: "Web storage includes localStorage, sessionStorage, and cookies.", category: "advanced", icon: "fa-database" },
+    { title: "Browser Events & Timers", note: "Timers execute code after delays; handle user events effectively.", category: "advanced", icon: "fa-clock" },
+    { title: "Animations with CSS & JS", note: "Animate elements using CSS transitions and JS.", category: "advanced", icon: "fa-film" },
+    { title: "ES6+ Advanced Topics", note: "Learn spread/rest operators, default params, generators.", category: "advanced", icon: "fa-sparkles" },
+    { title: "Design Patterns in JS", note: "Design patterns solve recurring problems efficiently.", category: "advanced", icon: "fa-layer-group" },
+    { title: "Testing & Unit Testing", note: "Test code using frameworks like Jest or Mocha.", category: "advanced", icon: "fa-vial" },
+    { title: "Performance Optimization", note: "Optimize performance: minimize DOM access, lazy load resources.", category: "advanced", icon: "fa-tachometer-alt" },
+
+    // TOOLS & FRAMEWORKS
+    { title: "Version Control with Git", note: "Git tracks code changes; commit often to save progress.", category: "tools", icon: "fa-git-alt" },
+    { title: "GitHub & Collaboration", note: "GitHub hosts projects and enables collaboration.", category: "tools", icon: "fa-github" },
+    { title: "Responsive Web Design", note: "Responsive design ensures websites look good on all screens.", category: "tools", icon: "fa-mobile" },
+    { title: "CSS Frameworks (Bootstrap/Tailwind)", note: "Use frameworks for faster styling.", category: "tools", icon: "fa-palette" },
+    { title: "Front-End Frameworks (React/Angular/Vue)", note: "Frameworks simplify UI development.", category: "tools", icon: "fa-cubes" },
+    { title: "State Management in Frameworks", note: "Store and update app data efficiently.", category: "tools", icon: "fa-database" },
+    { title: "Node.js Basics", note: "Node.js runs JS on server-side.", category: "tools", icon: "fa-server" },
+    { title: "NPM & Packages", note: "NPM manages packages and dependencies.", category: "tools", icon: "fa-box" },
+    { title: "Webpack & Bundlers", note: "Webpack bundles code and assets for production.", category: "tools", icon: "fa-cogs" },
+    { title: "Deploying Websites", note: "Deploy websites using Netlify, Vercel, or GitHub Pages.", category: "tools", icon: "fa-rocket" },
+
+    // PROJECTS
+    { title: "Build a Calculator", note: "Build a calculator with basic arithmetic functions.", category: "projects", icon: "fa-calculator" },
+    { title: "To-Do List App", note: "Allows adding, removing, and checking tasks.", category: "projects", icon: "fa-list-check" },
+    { title: "Quiz Application", note: "Quiz app asks questions and calculates score.", category: "projects", icon: "fa-question" },
+    { title: "Weather App using API", note: "Fetch live weather data from APIs.", category: "projects", icon: "fa-cloud-sun" },
+    { title: "Chat App Basics", note: "Use websockets or Firebase for real-time messaging.", category: "projects", icon: "fa-comments" },
+    { title: "Portfolio Website", note: "Showcase your projects and skills.", category: "projects", icon: "fa-briefcase" },
+    { title: "E-Commerce Landing Page", note: "Displays products and prices.", category: "projects", icon: "fa-cart-shopping" },
+    { title: "Blog Platform Basics", note: "Allows posting, editing, and deleting articles.", category: "projects", icon: "fa-blog" },
+    { title: "Interactive Game (JS Canvas)", note: "Create games with animations and interactions.", category: "projects", icon: "fa-gamepad" },
+    { title: "Full Stack Mini Project", note: "Combine front-end and back-end functionality.", category: "projects", icon: "fa-layer-group" }
+];
+
+// Render Lessons
+function renderLessons(filter="all", search="") {
+    const container = document.getElementById("lessonList");
+    container.innerHTML = "";
+
+    // Add Category Anchors
+    const categories = ["beginner","intermediate","advanced","tools","projects"];
+    categories.forEach(cat => {
+        const catDiv = document.createElement("div");
+        catDiv.id = cat;
+        container.appendChild(catDiv);
+    });
+
+    lessonsData.forEach((lesson,i)=>{
+        if ((filter==="all" || lesson.category===filter) &&
+            lesson.title.toLowerCase().includes(search.toLowerCase())) {
+            const parent = document.getElementById(lesson.category);
+            parent.innerHTML += `
+            <div class='lesson' onclick="toggleNotes(${i})">
+                <h3><i class="fa-solid ${lesson.icon}"></i> Lesson ${i+1}: ${lesson.title}</h3>
+                <div id="notes${i}" class="notes-box">${lesson.note}</div>
+            </div>`;
+        }
+    });
+}
+
+// Toggle Notes
+function toggleNotes(i){
+    const box = document.getElementById("notes"+i);
+    box.style.display = box.style.display==="block" ? "none" : "block";
+}
+
+// Filter Lessons
+function filterLessons(){
+    const search = document.getElementById("searchInput").value;
+    const filter = document.getElementById("categoryFilter").value;
+    renderLessons(filter, search);
+}
+
+// Initial render
+renderLessons();
+</script>
+</body>
+</html>
