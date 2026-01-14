@@ -54,8 +54,8 @@
 <!-- Repo Stats -->
 <h2 align="center">📊 Repo Statistics</h2>
 <p align="center">
-  <img src="https://komarev.com/ghpvc/star7272=Skillistars-codebase&label=Profile+Views&color=0e75b6&style=for-the-badge" alt="Profile views"/>
-  <img src="https://github.com/star7272?tab=followers" alt="GitHub Followers"/>
+  <img src="https://img.shields.io/badge/star7272=Skillistars-codebase&label=Profile+Views&color=0e75b6&style=for-the-badge" alt="Profile views"/>
+  <img src="https://img.shields.io/badge/github.com/star7272?tab=followers" alt="GitHub Followers"/>
   <img src="https://img.shields.io/github/stars/Skillistar?label=GitHub+Stars&style=for-the-badge" alt="GitHub Stars"/>
 </p>
 
@@ -68,7 +68,7 @@
 
 <!-- More Info -->
 <p align="center">
-  <a href="https://skillistars-codebase.pages.dev/" target="_blank" rel="noopener noreferrer">
+  <a href="https://star7272.github.io/neon-codebase/" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/badge/Explore%20Portal-00ffaa?style=for-the-badge&logo=internet-explorer&logoColor=white" width="340" height="50" alt="Explore Portal"/>
   </a>
 </p>
