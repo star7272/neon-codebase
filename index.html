@@ -109,19 +109,20 @@ footer {
 
 <body>
 
-  <!-- Compact Floating Visitor Location -->
+<!-- Compact Floating Visitor Location -->
 <div id="location-widget">
   <p id="location">Detecting...</p>
 </div>
 
 <script>
-  async function showIPLocation() {
-    // Fallback if GPS denied
+  async function getLocation() {
     try {
       const response = await fetch('https://ipapi.co/json/');
       const data = await response.json();
+
       const city = data.city || "Unknown City";
       const country = data.country_name || "Unknown Country";
+
       document.getElementById("location").textContent = `${city}, ${country}`;
     } catch (error) {
       document.getElementById("location").textContent = "Location unavailable";
@@ -129,35 +130,7 @@ footer {
     }
   }
 
-  async function showGPSLocation(lat, lon) {
-    // Use free API to convert GPS coordinates into city/country
-    try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-      const data = await response.json();
-      const city = data.address.city || data.address.town || data.address.village || "Unknown City";
-      const country = data.address.country || "Unknown Country";
-      document.getElementById("location").textContent = `${city}, ${country}`;
-    } catch (error) {
-      // If reverse geocoding fails, fallback to IP
-      showIPLocation();
-    }
-  }
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        showGPSLocation(lat, lon);
-      },
-      error => {
-        // If permission denied or error, use IP-based location
-        showIPLocation();
-      }
-    );
-  } else {
-    showIPLocation();
-  }
+  getLocation();
 </script>
 
 <style>
@@ -165,7 +138,7 @@ footer {
     position: fixed;
     top: 15px;
     left: 15px;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0, 0, 0, 0.7);
     padding: 5px 10px;
     border: 1px solid #00ff88;
     border-radius: 6px;
@@ -180,7 +153,7 @@ footer {
   #location-widget p {
     margin: 0;
   }
-</style>
+</style>  
   
 <!-- Real-Time Clock and Date -->
 <div id="clock-container">
@@ -714,6 +687,7 @@ function toggleNotes(id) {
 </body>
 
 </html
+
 
 
 
