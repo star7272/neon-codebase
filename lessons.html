@@ -274,5 +274,32 @@ function filterLessons(){
 // Initial render
 renderLessons();
 </script>
+
+    <footer style="text-align:center; margin-top:30px; font-family:'Courier New', monospace; font-size:14px;">
+  &copy; <span id="year"></span> YourWebsiteName. All rights reserved.
+</footer>
+
+<style>
+  footer {
+    color: #00ff88;
+    text-shadow: 
+      0 0 5px #00ff88, 
+      0 0 10px #00ff88, 
+      0 0 20px #00ff88, 
+      0 0 40px #00ff88;
+    animation: glow 2s infinite alternate;
+  }
+
+  @keyframes glow {
+    from { text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88; }
+    to { text-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88, 0 0 30px #00ff88, 0 0 40px #00ff88; }
+  }
+</style>
+
+<script>
+  // Auto-update copyright year
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
 </body>
+
 </html>
