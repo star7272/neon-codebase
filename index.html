@@ -249,6 +249,13 @@ footer {
   <p onclick="showLogin()">Already Have Account?</p>
 </div>
 
+<!-- MAIN WEBSITE CONTENT (shown after login) -->
+<div id="mainContent" class="hidden">
+  <h1>Welcome to the Website!</h1>
+  <p>This is your main content after login.</p>
+  <button onclick="logoutUser()">Logout</button>
+</div>
+
 <style>
   .container {
     background: rgba(0,0,0,0.85);
@@ -261,12 +268,11 @@ footer {
     margin: 20px auto;
   }
 
-  .container.hidden {
+  .container.hidden, #mainContent.hidden {
     display: none;
   }
 
-  h2 {
-    margin-bottom: 20px;
+  h2, h1 {
     text-shadow: 0 0 10px #00ff88;
   }
 
@@ -324,6 +330,11 @@ footer {
     font-size: 14px;
     margin-top: 10px;
   }
+
+  #mainContent {
+    text-align: center;
+    margin-top: 50px;
+  }
 </style>
 
 <script>
@@ -338,7 +349,7 @@ footer {
     document.getElementById('loginBox').classList.remove('hidden');
   }
 
-  // Dummy storage (for demo only)
+  // Dummy storage (for demo)
   let users = [];
 
   function registerUser() {
@@ -359,6 +370,7 @@ footer {
 
     users.push({ name, email, pass });
     message.innerHTML = '<p class="success">Registration successful!</p>';
+
     document.getElementById('regName').value = '';
     document.getElementById('regEmail').value = '';
     document.getElementById('regPass').value = '';
@@ -376,12 +388,19 @@ footer {
 
     const user = users.find(u => u.email === email && u.pass === pass);
     if (user) {
-      message.innerHTML = `<p class="success">Welcome, ${user.name}!</p>`;
-      document.getElementById('loginEmail').value = '';
-      document.getElementById('loginPass').value = '';
+      // Show main content
+      document.getElementById('loginBox').classList.add('hidden');
+      document.getElementById('registerBox').classList.add('hidden');
+      document.getElementById('mainContent').classList.remove('hidden');
+      message.innerHTML = '';
     } else {
       message.innerHTML = '<p class="error">Invalid email or password.</p>';
     }
+  }
+
+  function logoutUser() {
+    document.getElementById('mainContent').classList.add('hidden');
+    document.getElementById('loginBox').classList.remove('hidden');
   }
 </script>
 
@@ -823,6 +842,7 @@ function toggleNotes(id) {
 </body>
 
 </html
+
 
 
 
