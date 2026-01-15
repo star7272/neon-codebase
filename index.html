@@ -108,7 +108,71 @@ footer {
 </head>
 
 <body>
+  
+<!-- Real-Time Clock and Date -->
+<div id="clock-container">
+  <h2>Current Date & Time</h2>
+  <div id="date"></div>
+  <div id="clock"></div>
+</div>
 
+<script>
+  function updateDateTime() {
+    const now = new Date();
+
+    // Format time
+    let hours = now.getHours().toString().padStart(2, '0');
+    let minutes = now.getMinutes().toString().padStart(2, '0');
+    let seconds = now.getSeconds().toString().padStart(2, '0');
+    const timeString = `${hours}:${minutes}:${seconds}`;
+
+    // Format date
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const dayName = days[now.getDay()];
+    const day = now.getDate();
+    const month = months[now.getMonth()];
+    const year = now.getFullYear();
+    const dateString = `${dayName}, ${day} ${month} ${year}`;
+
+    // Update HTML elements
+    document.getElementById("clock").textContent = timeString;
+    document.getElementById("date").textContent = dateString;
+  }
+
+  // Run immediately and every second
+  updateDateTime();
+  setInterval(updateDateTime, 1000);
+</script>
+
+<style>
+  #clock-container {
+    text-align: center;
+    margin-top: 60px;
+    color: #00ff88;
+    font-family: 'Courier New', monospace;
+  }
+
+  #clock-container h2 {
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px #00ff88;
+  }
+
+  #date {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #00ffaa;
+    text-shadow: 0 0 15px #00ffaa;
+  }
+
+  #clock {
+    font-size: 3em;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px #00ff88, 0 0 40px #00ff88;
+  }
+</style>
+  
 <!-- TOP LOGO + SITE NAME -->
 <div id="topBrand">
   <img src="https://files.catbox.moe/wkuosq.png" alt="Logo">
@@ -577,6 +641,7 @@ function toggleNotes(id) {
 </body>
 
 </html
+
 
 
 
