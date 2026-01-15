@@ -233,6 +233,9 @@ footer {
   <h2>Login</h2>
   <input id="loginEmail" type="email" placeholder="Email">
   <input id="loginPass" type="password" placeholder="Password">
+  <label style="display:flex; align-items:center; gap:5px; font-size:14px; color:#00ff88;">
+    <input type="checkbox" id="rememberMe"> Remember Me
+  </label>
   <button onclick="loginUser()">Login</button>
   <div id="loginMessage"></div>
   <p onclick="showRegister()">Create Account</p>
@@ -249,14 +252,23 @@ footer {
   <p onclick="showLogin()">Already Have Account?</p>
 </div>
 
-<!-- MAIN WEBSITE CONTENT (shown after login) -->
+<!-- LESSONS CONTENT (shown after login) -->
 <div id="mainContent" class="hidden">
-  <h1>Welcome to the Website!</h1>
-  <p>This is your main content after login.</p>
-  <button onclick="logoutUser()">Logout</button>
+  <h1><i class="fa-solid fa-book"></i> Coding Lessons</h1>
+  <div id="lessonList"></div>
+  <button onclick="logoutUser()" style="margin-top:20px;">Logout</button>
 </div>
 
 <style>
+  body {
+    background: #000;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
+
   .container {
     background: rgba(0,0,0,0.85);
     padding: 30px 40px;
@@ -264,7 +276,6 @@ footer {
     border: 1px solid #00ff88;
     box-shadow: 0 0 20px #00ff88;
     width: 350px;
-    text-align: center;
     margin: 20px auto;
   }
 
@@ -272,11 +283,11 @@ footer {
     display: none;
   }
 
-  h2, h1 {
+  h1, h2 {
     text-shadow: 0 0 10px #00ff88;
   }
 
-  input {
+  input[type=text], input[type=email], input[type=password] {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
@@ -331,26 +342,67 @@ footer {
     margin-top: 10px;
   }
 
-  #mainContent {
-    text-align: center;
-    margin-top: 50px;
+  /* LESSONS STYLING */
+  .lesson {
+    border: 2px solid cyan;
+    margin: 12px 0;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    background: rgba(0, 255, 255, 0.05);
+    box-shadow: 0 0 10px cyan;
+  }
+
+  .lesson:hover {
+    background: rgba(0, 255, 255, 0.2);
+    transform: scale(1.02);
+  }
+
+  .lesson h3 {
+    margin: 0;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-shadow: 0 0 10px cyan;
+  }
+
+  .notes-box {
+    display: none;
+    padding: 10px;
+    margin-top: 8px;
+    border-left: 2px solid cyan;
+    font-size: 15px;
+    line-height: 1.5;
+    animation: fadeIn 0.4s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+
 <script>
-  // Toggle between login & register
+  // Toggle forms
   function showRegister() {
     document.getElementById('loginBox').classList.add('hidden');
     document.getElementById('registerBox').classList.remove('hidden');
   }
-
   function showLogin() {
     document.getElementById('registerBox').classList.add('hidden');
     document.getElementById('loginBox').classList.remove('hidden');
   }
 
-  // Dummy storage (for demo)
-  let users = [];
+  // Dummy storage
+  let users = JSON.parse(localStorage.getItem('users') || '[]');
+
+  function saveUsers() {
+    localStorage.setItem('users', JSON.stringify(users));
+  }
 
   function registerUser() {
     const name = document.getElementById('regName').value.trim();
@@ -369,6 +421,7 @@ footer {
     }
 
     users.push({ name, email, pass });
+    saveUsers();
     message.innerHTML = '<p class="success">Registration successful!</p>';
 
     document.getElementById('regName').value = '';
@@ -379,6 +432,7 @@ footer {
   function loginUser() {
     const email = document.getElementById('loginEmail').value.trim();
     const pass = document.getElementById('loginPass').value;
+    const remember = document.getElementById('rememberMe').checked;
     const message = document.getElementById('loginMessage');
 
     if (!email || !pass) {
@@ -388,19 +442,86 @@ footer {
 
     const user = users.find(u => u.email === email && u.pass === pass);
     if (user) {
-      // Show main content
+      if (remember) {
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
+      }
       document.getElementById('loginBox').classList.add('hidden');
       document.getElementById('registerBox').classList.add('hidden');
       document.getElementById('mainContent').classList.remove('hidden');
       message.innerHTML = '';
+      loadLessons();
     } else {
       message.innerHTML = '<p class="error">Invalid email or password.</p>';
     }
   }
 
   function logoutUser() {
+    localStorage.removeItem('loggedInUser');
     document.getElementById('mainContent').classList.add('hidden');
     document.getElementById('loginBox').classList.remove('hidden');
+  }
+
+  // Auto-login if user chose remember me
+  window.onload = function() {
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    if (loggedInUser) {
+      document.getElementById('loginBox').classList.add('hidden');
+      document.getElementById('registerBox').classList.add('hidden');
+      document.getElementById('mainContent').classList.remove('hidden');
+      loadLessons();
+    }
+  }
+
+  // LESSONS DATA
+  function loadLessons() {
+    const lessons = [
+      "Introduction to Coding",
+      "HTML Basics",
+      "CSS Styling",
+      "JavaScript Foundations",
+      "Variables & Data Types",
+      "Functions",
+      "Loops",
+      "DOM Manipulation",
+      "Events & Interactivity",
+      "Mini Beginner Projects"
+    ];
+
+    const notes = [
+      `Coding is the process of giving instructions to a computer.`,
+      `HTML structures websites using tags like <h1>, <p>, <img>.`,
+      `CSS adds design, color, animations, layouts, and style.`,
+      `JavaScript makes websites interactive.`,
+      `Variables store data: numbers, strings, booleans, arrays, objects.`,
+      `Functions are reusable code blocks.`,
+      `Loops allow repeating actions automatically.`,
+      `DOM Manipulation changes HTML elements dynamically.`,
+      `Events trigger actions like clicks, scrolls, typing.`,
+      `Mini Projects include: calculator, todo app, counter, quiz app.`
+    ];
+
+    const icons = [
+      "fa-code", "fa-html5", "fa-paint-brush", "fa-js",
+      "fa-database", "fa-gears", "fa-repeat", "fa-browser",
+      "fa-bolt", "fa-diagram-project"
+    ];
+
+    let html = "";
+    lessons.forEach((l, i) => {
+      html += `
+        <div class='lesson' onclick="toggleNotes(${i})">
+          <h3><i class="fa-solid ${icons[i]}"></i> Lesson ${i + 1}: ${l}</h3>
+          <div id="notes${i}" class="notes-box">${notes[i]}</div>
+        </div>
+      `;
+    });
+
+    document.getElementById("lessonList").innerHTML = html;
+  }
+
+  function toggleNotes(i) {
+    const box = document.getElementById("notes" + i);
+    box.style.display = box.style.display === "block" ? "none" : "block";
   }
 </script>
 
@@ -842,6 +963,7 @@ function toggleNotes(id) {
 </body>
 
 </html
+
 
 
 
