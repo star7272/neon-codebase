@@ -234,8 +234,8 @@ footer {
   <input id="loginEmail" type="email" placeholder="Email">
   <input id="loginPass" type="password" placeholder="Password">
   <button onclick="loginUser()">Login</button>
-
-  <p style="text-align:center;margin-top:10px;cursor:pointer" onclick="showRegister()">Create Account</p>
+  <div id="loginMessage"></div>
+  <p onclick="showRegister()">Create Account</p>
 </div>
 
 <!-- REGISTER PAGE -->
@@ -245,9 +245,145 @@ footer {
   <input id="regEmail" type="email" placeholder="Email">
   <input id="regPass" type="password" placeholder="Password">
   <button onclick="registerUser()">Register</button>
-
-  <p style="text-align:center;margin-top:10px;cursor:pointer" onclick="showLogin()">Already Have Account?</p>
+  <div id="regMessage"></div>
+  <p onclick="showLogin()">Already Have Account?</p>
 </div>
+
+<style>
+  .container {
+    background: rgba(0,0,0,0.85);
+    padding: 30px 40px;
+    border-radius: 12px;
+    border: 1px solid #00ff88;
+    box-shadow: 0 0 20px #00ff88;
+    width: 350px;
+    text-align: center;
+    margin: 20px auto;
+  }
+
+  .container.hidden {
+    display: none;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #00ff88;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: 1px solid #00ff88;
+    background: #000;
+    color: #00ff88;
+    font-size: 14px;
+    text-shadow: 0 0 5px #00ff88;
+  }
+
+  input::placeholder {
+    color: #00ff88;
+    opacity: 0.7;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 6px;
+    background: #00ff88;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background: #00cc66;
+    box-shadow: 0 0 15px #00ff88;
+  }
+
+  p {
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #00ff88;
+  }
+
+  .error {
+    color: #ff4444;
+    font-size: 13px;
+    margin-top: 5px;
+  }
+
+  .success {
+    color: #00ff88;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+</style>
+
+<script>
+  // Toggle between login & register
+  function showRegister() {
+    document.getElementById('loginBox').classList.add('hidden');
+    document.getElementById('registerBox').classList.remove('hidden');
+  }
+
+  function showLogin() {
+    document.getElementById('registerBox').classList.add('hidden');
+    document.getElementById('loginBox').classList.remove('hidden');
+  }
+
+  // Dummy storage (for demo only)
+  let users = [];
+
+  function registerUser() {
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const pass = document.getElementById('regPass').value;
+    const message = document.getElementById('regMessage');
+
+    if (!name || !email || !pass) {
+      message.innerHTML = '<p class="error">Please fill all fields.</p>';
+      return;
+    }
+
+    if (users.find(u => u.email === email)) {
+      message.innerHTML = '<p class="error">Email already registered.</p>';
+      return;
+    }
+
+    users.push({ name, email, pass });
+    message.innerHTML = '<p class="success">Registration successful!</p>';
+    document.getElementById('regName').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regPass').value = '';
+  }
+
+  function loginUser() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    const message = document.getElementById('loginMessage');
+
+    if (!email || !pass) {
+      message.innerHTML = '<p class="error">Please fill all fields.</p>';
+      return;
+    }
+
+    const user = users.find(u => u.email === email && u.pass === pass);
+    if (user) {
+      message.innerHTML = `<p class="success">Welcome, ${user.name}!</p>`;
+      document.getElementById('loginEmail').value = '';
+      document.getElementById('loginPass').value = '';
+    } else {
+      message.innerHTML = '<p class="error">Invalid email or password.</p>';
+    }
+  }
+</script>
 
 <!-- DASHBOARD / LESSONS PAGE -->
 <div class="container hidden" id="dashboard">
@@ -687,6 +823,7 @@ function toggleNotes(id) {
 </body>
 
 </html
+
 
 
 
